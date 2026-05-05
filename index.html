@@ -883,10 +883,10 @@ footer {
   <div class="container reveal">
     <h2>Ready to Build<br><span style="background:linear-gradient(135deg,var(--neon),var(--blue2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Something Great?</span></h2>
     <p>Tell us your idea — we'll turn it into reality. Free consultation, no commitment.</p>
-    <div class="cta-box">
-      <input type="email" placeholder="Enter your email address..." />
-      <button onclick="handleCTA()">Get Free Quote</button>
-    </div>
+    <form action="https://formspree.io/f/xeenglnl" method="POST" class="cta-box">
+      <input type="email" name="email" placeholder="Enter your email address..." required />
+      <button type="submit">Get Free Quote</button>
+    </form>
     <p style="margin-top:16px; font-size:13px; color:var(--muted);">Or reach us at <a href="mailto:hello@cloudnera.com" style="color:var(--neon); text-decoration:none;">hello@cloudnera.com</a></p>
   </div>
 </section>

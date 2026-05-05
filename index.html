@@ -883,10 +883,13 @@ footer {
   <div class="container reveal">
     <h2>Ready to Build<br><span style="background:linear-gradient(135deg,var(--neon),var(--blue2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Something Great?</span></h2>
     <p>Tell us your idea — we'll turn it into reality. Free consultation, no commitment.</p>
-    <form action="https://formspree.io/f/xeenglnl" method="POST" class="cta-box">
-      <input type="email" name="email" placeholder="Enter your email address..." required />
-      <button type="submit">Get Free Quote</button>
+    <form id="contact-form" class="cta-box">
+      <input type="email" id="form-email" placeholder="Enter your email address..." required />
+      <button type="submit" id="form-btn">Get Free Quote</button>
     </form>
+    <div id="form-success" style="display:none; margin-top:20px; padding:14px 28px; background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.3); border-radius:8px; color:var(--neon); font-size:15px; font-weight:500;">
+      ✅ Thank you! We will contact you within 24 hours.
+    </div>
     <p style="margin-top:16px; font-size:13px; color:var(--muted);">Or reach us at <a href="mailto:hello@cloudnera.com" style="color:var(--neon); text-decoration:none;">hello@cloudnera.com</a></p>
   </div>
 </section>
@@ -1039,17 +1042,45 @@ const statObs = new IntersectionObserver((entries) => {
 const statsEl = document.querySelector('.hero-stats');
 if(statsEl) statObs.observe(statsEl);
 
-// CTA
-function handleCTA() {
-  const input = document.querySelector('.cta-box input');
-  if(input.value && input.value.includes('@')) {
-    input.value = '';
-    input.placeholder = '✓ We\'ll be in touch soon!';
-    setTimeout(() => input.placeholder = 'Enter your email address...', 3000);
-  } else {
-    input.style.borderLeft = '2px solid #ff4444';
-    setTimeout(() => input.style.borderLeft = 'none', 1500);
-  }
+// AJAX Form Submission - No page redirect
+const contactForm = document.getElementById('contact-form');
+if(contactForm) {
+  contactForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email = document.getElementById('form-email').value;
+    const btn = document.getElementById('form-btn');
+    
+    if(!email || !email.includes('@')) {
+      document.getElementById('form-email').style.borderLeft = '2px solid #ff4444';
+      setTimeout(() => document.getElementById('form-email').style.borderLeft = 'none', 1500);
+      return;
+    }
+
+    btn.textContent = 'Sending...';
+    btn.style.opacity = '0.7';
+    btn.disabled = true;
+
+    try {
+      const response = await fetch('https://formspree.io/f/xeenglnl', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email: email })
+      });
+
+      if(response.ok) {
+        contactForm.style.display = 'none';
+        document.getElementById('form-success').style.display = 'block';
+      } else {
+        btn.textContent = 'Try Again';
+        btn.style.opacity = '1';
+        btn.disabled = false;
+      }
+    } catch(err) {
+      btn.textContent = 'Try Again';
+      btn.style.opacity = '1';
+      btn.disabled = false;
+    }
+  });
 }
 </script>
 </body>
